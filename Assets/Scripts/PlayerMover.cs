@@ -6,38 +6,34 @@ using UnityEngine;
 public class PlayerMover : MonoBehaviour {
     private Rigidbody2D _rb;
 
-    [SerializeField] float _speedX = 1;
-    [SerializeField] float _jumpForce = 500;
-    private const float SPEED_COEFFICIENT = 50;
+    [SerializeField] float _speed = 1;
+    [SerializeField] float _dashForce = 2000;
+    private const float SPEED_COEFF = 50;
     private const string HORIZONTAL_AXIS = "Horizontal";
-    private const string GROUND_TAG = "Ground";
-    private float _direction;
-    private bool _isJump;
-    private bool _isGround;
+    private const string VERTICAL_AXIS = "Vertical";
+    private Vector3 _direction;
+    private bool _isDash;
 
-    void Start() {
+    void Awake() {
         _rb = GetComponent<Rigidbody2D>();
     }
 
     void Update() {
-        _direction = Input.GetAxis(HORIZONTAL_AXIS);
-        if (_isGround && Input.GetKeyDown(KeyCode.W)) {
-            _isJump = true;
+        _direction = new Vector2(Input.GetAxis(HORIZONTAL_AXIS), Input.GetAxis(VERTICAL_AXIS));
+
+        if (_direction != Vector3.zero) {
+            transform.up = -_direction.normalized;
+        }
+        if (!_isDash && Input.GetKeyDown(KeyCode.Space)) {
+            _isDash = true;
         }
     }
 
     void FixedUpdate() {
-        _rb.velocity = new Vector2(_speedX * _direction * SPEED_COEFFICIENT * Time.fixedDeltaTime, _rb.velocity.y);
-        if (_isJump) {
-            _rb.AddForce(new Vector2(0, _jumpForce));
-            _isJump = false;
-            _isGround = false;
-        }
-    }
-
-    void OnCollisionEnter2D(Collision2D collision) {
-        if (collision.gameObject.CompareTag(GROUND_TAG)) {
-            _isGround = true;
+        _rb.velocity = _speed * SPEED_COEFF * Time.fixedDeltaTime * _direction;
+        if (_isDash) {
+            _rb.AddForce(_direction * _dashForce);
+            _isDash = false;
         }
     }
 }
