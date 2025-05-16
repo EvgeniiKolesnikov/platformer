@@ -2,9 +2,6 @@ using UnityEngine;
 
 public class InputReader : MonoBehaviour
 {
-    private const string HORIZONTAL_AXIS = "Horizontal";
-    private const string VERTICAL_AXIS = "Vertical";
-
     private float _directionX;
     private float _directionY;
 
@@ -22,8 +19,8 @@ public class InputReader : MonoBehaviour
             SpaceKeyPressed = false;
         }
 
-        _directionX = Input.GetAxis(HORIZONTAL_AXIS);
-        _directionY = Input.GetAxis(VERTICAL_AXIS);
+        _directionX = Input.GetAxis(Constants.InputData.HORIZONTAL_AXIS);
+        _directionY = Input.GetAxis(Constants.InputData.VERTICAL_AXIS);
 
         Direction = new Vector2(_directionX, _directionY).normalized;
     }
