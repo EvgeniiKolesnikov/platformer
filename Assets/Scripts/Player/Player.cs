@@ -10,6 +10,8 @@ public class Player : MonoBehaviour
     private CollisionHandler _collisionHandler;
     private Dash _dash;
 
+    private IInteractable _interactable;
+
     private void Awake()
     {
         _inputReader = GetComponent<InputReader>();
@@ -19,9 +21,19 @@ public class Player : MonoBehaviour
         _collisionHandler = GetComponent<CollisionHandler>();
     }
 
+    private void OnEnable()
+    {
+        _collisionHandler.FinishReaced += OnFinishReaced;
+    }
+
+    private void OnDisable()
+    {
+        _collisionHandler.FinishReaced -= OnFinishReaced;
+    }
+
     private void Update()
     {
-        if (_inputReader.SpaceKeyPressed && _dash.IsCanDash())
+        if (_inputReader.DashKeyPressed && _dash.IsCanDash())
         {
             _dash.SetDirection(_inputReader.Direction);
             _dash.StartDash();
@@ -51,5 +63,15 @@ public class Player : MonoBehaviour
         {
             _playerMover.Move(_inputReader.Direction, _playerMover.MoveSpeed);
         }
+
+        if (_inputReader.GetIsInteract() && _interactable != null)
+        {
+            _interactable.Interact();
+        }
+    }
+
+    private void OnFinishReaced(IInteractable interactable)
+    {
+        _interactable = interactable;
     }
 }

@@ -1,18 +1,18 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-public class Finish : MonoBehaviour
+public class Finish : MonoBehaviour, IInteractable
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField] public Switch[] _switches;
 
-    // Update is called once per frame
-    void Update()
+    public void Interact()
     {
-        
+        if (_switches.All(i => i.IsActive))
+        {
+            gameObject.SetActive(false);
+        }
     }
 }
