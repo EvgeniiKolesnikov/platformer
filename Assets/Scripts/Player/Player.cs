@@ -1,12 +1,13 @@
 using UnityEngine;
 
 [RequireComponent(typeof(InputReader), typeof(PlayerMover), typeof(Dash))]
-[RequireComponent(typeof(PlayerAnimator))]
+[RequireComponent(typeof(PlayerAnimator), typeof(CollisionHandler))]
 public class Player : MonoBehaviour
 {
     private InputReader _inputReader;
     private PlayerMover _playerMover;
     private PlayerAnimator _playerAnimator;
+    private CollisionHandler _collisionHandler;
     private Dash _dash;
 
     private void Awake()
@@ -15,6 +16,7 @@ public class Player : MonoBehaviour
         _playerMover = GetComponent<PlayerMover>();
         _playerAnimator = GetComponent<PlayerAnimator>();
         _dash = GetComponent<Dash>();
+        _collisionHandler = GetComponent<CollisionHandler>();
     }
 
     private void Update()
