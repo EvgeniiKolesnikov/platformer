@@ -25,12 +25,12 @@ public class Switch : MonoBehaviour, IInteractable
         if (IsActive)
         {
             _animator.SetTrigger(Constants.AnimatorData.IsOn);
-            _activatable.Activate();
+            _activatable?.Activate();
         }
         else
         {
             _animator.SetTrigger(Constants.AnimatorData.IsOff);
-            _activatable.Deactivate();
+            _activatable?.Deactivate();
         }
     }
 }
