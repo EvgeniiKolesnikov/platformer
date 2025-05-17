@@ -43,7 +43,6 @@ public class Player : MonoBehaviour
 
     private void OnFinishReached(IInteractable interactable)
     {
-        print("OnFinishReached");
         _interactable = interactable;
     }
 
