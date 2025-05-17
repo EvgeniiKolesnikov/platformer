@@ -15,15 +15,10 @@ public class Dash : MonoBehaviour
         _dashTimer += Time.fixedDeltaTime;
 
         if (_dashTimer >= _dashDuration)
-        {
             IsDashing = false;
-        }
     }
 
-    public bool IsCanDash()
-    {
-        return _dashTimer >= _dashReloadTime;
-    }
+    public bool IsCanDash() => _dashTimer >= _dashReloadTime;
 
     public void StartDash()
     {

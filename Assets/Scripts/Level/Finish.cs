@@ -1,12 +1,9 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 public class Finish : MonoBehaviour, IInteractable
 {
-    [SerializeField] public Switch[] _switches;
+    [SerializeField] private Switch[] _switches;
 
     public void Interact()
     {

@@ -12,6 +12,7 @@ public class PlayerMover : MonoBehaviour
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
+        Flip();
     }
 
     public void Move(Vector2 direction, float speed)

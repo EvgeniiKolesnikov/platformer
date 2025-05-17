@@ -1,16 +1,12 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
+using System.Linq;
 using UnityEngine;
 
 [RequireComponent(typeof(Animator))]
-
-public class Switch : MonoBehaviour, IInteractable
+public class BigDoor : ActivatableObject, IActivatable
 {
-    [SerializeField] private ActivatableObject _activatable;
-
+    [SerializeField] private Switch[] _switches;
     private Animator _animator;
+
     public bool IsActive { get; private set; }
 
     private void Awake()
@@ -18,19 +14,20 @@ public class Switch : MonoBehaviour, IInteractable
         _animator = GetComponent<Animator>();
     }
 
-    public void Interact()
+    public override void Activate()
     {
-        IsActive = !IsActive;
-
+        if (_switches.All(i => i.IsActive))
+        {
+            IsActive = true;
+            _animator.SetTrigger(Constants.AnimatorData.IsOn);
+        }
+    }
+    public override void Deactivate()
+    {
         if (IsActive)
         {
-            _animator.SetTrigger(Constants.AnimatorData.IsOn);
-            _activatable.Activate();
-        }
-        else
-        {
+            IsActive = false;
             _animator.SetTrigger(Constants.AnimatorData.IsOff);
-            _activatable.Deactivate();
         }
     }
 }

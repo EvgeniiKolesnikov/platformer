@@ -5,13 +5,13 @@ using UnityEngine;
 
 public class CollisionHandler : MonoBehaviour
 {
-    public event Action<IInteractable> FinishReaced;
+    public event Action<IInteractable> FinishReached;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.TryGetComponent(out IInteractable finish))
         {
-            FinishReaced?.Invoke(finish);
+            FinishReached?.Invoke(finish);
         }
     }
 
@@ -19,7 +19,7 @@ public class CollisionHandler : MonoBehaviour
     {
         if (collision.TryGetComponent(out IInteractable _))
         {
-            FinishReaced?.Invoke(null);
+            FinishReached?.Invoke(null);
         }
     }
 }

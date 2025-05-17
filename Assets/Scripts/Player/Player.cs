@@ -23,55 +23,55 @@ public class Player : MonoBehaviour
 
     private void OnEnable()
     {
-        _collisionHandler.FinishReaced += OnFinishReaced;
+        _collisionHandler.FinishReached += OnFinishReached;
     }
 
     private void OnDisable()
     {
-        _collisionHandler.FinishReaced -= OnFinishReaced;
+        _collisionHandler.FinishReached -= OnFinishReached;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
-        if (_inputReader.DashKeyPressed && _dash.IsCanDash())
+        UpdateDashStatus();
+        UpdatePlayerAnimator();
+        PlayerMove();
+
+        if (_inputReader.GetIsInteract() && _interactable != null)
+            _interactable.Interact();
+    }
+
+    private void OnFinishReached(IInteractable interactable)
+    {
+        print("OnFinishReached");
+        _interactable = interactable;
+    }
+
+    private void UpdateDashStatus()
+    {
+        if (_inputReader.GetIsDash() && _dash.IsCanDash())
         {
             _dash.SetDirection(_inputReader.Direction);
             _dash.StartDash();
         }
     }
 
-
-    private void FixedUpdate()
+    private void UpdatePlayerAnimator()
     {
         _playerAnimator.SetSpeedX(_inputReader.Direction.x);
         _playerAnimator.SetSpeedY(_inputReader.Direction.y);
 
         if (_inputReader.Direction.x == 0 && _inputReader.Direction.y == 0)
-        {
             _playerAnimator.SetIdle(true);
-        }
         else
-        {
             _playerAnimator.SetIdle(false);
-        }
-
-        if (_dash.IsDashing)
-        {
-            _playerMover.Move(_dash.DashDirection, _dash.DashSpeed);
-        }
-        else
-        {
-            _playerMover.Move(_inputReader.Direction, _playerMover.MoveSpeed);
-        }
-
-        if (_inputReader.GetIsInteract() && _interactable != null)
-        {
-            _interactable.Interact();
-        }
     }
 
-    private void OnFinishReaced(IInteractable interactable)
+    private void PlayerMove()
     {
-        _interactable = interactable;
+        if (_dash.IsDashing)
+            _playerMover.Move(_dash.DashDirection, _dash.DashSpeed);
+        else
+            _playerMover.Move(_inputReader.Direction, _playerMover.MoveSpeed);
     }
 }
