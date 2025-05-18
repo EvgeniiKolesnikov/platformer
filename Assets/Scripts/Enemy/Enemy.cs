@@ -5,14 +5,17 @@ public class Enemy : MonoBehaviour
 {
     [SerializeField] private WayPoint[] _wayPoints;
     [SerializeField] private float _speed = 0.03f;
+    [SerializeField] private float _waitTime = 2f;
 
     private Rigidbody2D _rigidbody;
     private bool _isTurnLeft = true;
     private int _wayPointIndex;
     private Transform _target;
-    private float _maxSqrDistance = 0.05f;
+    private float _maxSqrDistance = 0.02f;
+    private bool _isWaiting = false;
+    private float _endWaitTime;
 
-    private void Start()
+    private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
         _target = _wayPoints[_wayPointIndex].transform;
@@ -20,11 +23,20 @@ public class Enemy : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Move();
+        if (_isWaiting == false)
+        {
+            Move();
+        }
 
-        if (IsTargetReached())
+        if (IsTargetReached() && _isWaiting == false)
+        {
+            _isWaiting = true;
+            _endWaitTime = Time.time + _waitTime;
+        }
+        if (_isWaiting && _endWaitTime <= Time.time)
         {
             ChangeTarget();
+            _isWaiting = false;
         }
     }
 
@@ -45,19 +57,7 @@ public class Enemy : MonoBehaviour
     {
         _wayPointIndex = ++_wayPointIndex % _wayPoints.Length;
         _target = _wayPoints[_wayPointIndex].transform;
-
-        if ((transform.position.x > 0 && _isTurnLeft)
-        || (transform.position.x < 0 && _isTurnLeft == false))
-        {
-            Flip();
-        }
-    }
-
-    private void Flip()
-    {
         _isTurnLeft = !_isTurnLeft;
-        Vector3 scale = transform.localScale;
-        scale.x *= -1;
-        transform.localScale = scale;
+        transform.Flip();
     }
 }

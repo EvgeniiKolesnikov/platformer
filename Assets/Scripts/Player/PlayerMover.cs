@@ -11,7 +11,8 @@ public class PlayerMover : MonoBehaviour
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
-        Flip();
+        _isTurnLeft = false;
+        transform.Flip();
     }
 
     public void Move(Vector2 direction, float speed)
@@ -21,15 +22,9 @@ public class PlayerMover : MonoBehaviour
         if ((direction.x > 0 && _isTurnLeft)
         || (direction.x < 0 && _isTurnLeft == false))
         {
-            Flip();
+            _isTurnLeft = !_isTurnLeft;
+            transform.Flip();
         }
     }
 
-    private void Flip()
-    {
-        _isTurnLeft = !_isTurnLeft;
-        Vector3 scale = transform.localScale;
-        scale.x *= -1;
-        transform.localScale = scale;
-    }
 }
