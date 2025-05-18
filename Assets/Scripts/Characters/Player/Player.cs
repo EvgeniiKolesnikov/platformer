@@ -1,13 +1,14 @@
 using UnityEngine;
 
-[RequireComponent(typeof(InputReader), typeof(PlayerMover), typeof(Dash))]
-[RequireComponent(typeof(PlayerAnimator), typeof(CollisionHandler))]
+[RequireComponent(typeof(InputReader), typeof(Mover), typeof(Dash))]
+[RequireComponent(typeof(PlayerAnimator), typeof(CollisionHandler), typeof(Fliper))]
 public class Player : MonoBehaviour
 {
     private InputReader _inputReader;
-    private PlayerMover _playerMover;
+    private Mover _mover;
     private PlayerAnimator _playerAnimator;
     private CollisionHandler _collisionHandler;
+    private Fliper _fliper;
     private Dash _dash;
 
     private IInteractable _interactable;
@@ -15,10 +16,12 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         _inputReader = GetComponent<InputReader>();
-        _playerMover = GetComponent<PlayerMover>();
+        _mover = GetComponent<Mover>();
         _playerAnimator = GetComponent<PlayerAnimator>();
-        _dash = GetComponent<Dash>();
         _collisionHandler = GetComponent<CollisionHandler>();
+        _fliper = GetComponent<Fliper>();
+        _dash = GetComponent<Dash>();
+        transform.Flip();
     }
 
     private void OnEnable()
@@ -36,7 +39,12 @@ public class Player : MonoBehaviour
         UpdateDashStatus();
         UpdatePlayerAnimator();
         PlayerMove();
+        PlayerInteract();
 
+    }
+
+    private void PlayerInteract()
+    {
         if (_inputReader.GetIsInteract() && _interactable != null)
             _interactable.Interact();
     }
@@ -68,9 +76,19 @@ public class Player : MonoBehaviour
 
     private void PlayerMove()
     {
+        if (_inputReader.Direction != Vector2.zero)
+        {
+            _fliper.LookAtTarget(transform.position + Vector3.right * _inputReader.Direction.x);
+        }
+        // if ((direction.x > 0 && _isTurnLeft)
+        // || (direction.x < 0 && _isTurnLeft == false))
+        // {
+        //     _isTurnLeft = !_isTurnLeft;
+        //     transform.Flip();
+        // }
         if (_dash.IsDashing)
-            _playerMover.Move(_dash.DashDirection, _dash.DashSpeed);
+            _mover.Move(_dash.DashDirection, _dash.DashSpeed);
         else
-            _playerMover.Move(_inputReader.Direction, _playerMover.MoveSpeed);
+            _mover.Move(_inputReader.Direction, _mover.MoveSpeed);
     }
 }
