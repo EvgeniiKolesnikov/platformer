@@ -25,30 +25,15 @@ public class Enemy : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Collider2D hit = Physics2D.OverlapBox(GetLookOrigin(), _seeAreaSize, 0, _targetLayer);
-
-        if (hit != null)
+        if (TrySeeTarget(out Transform target))
         {
-            // print(hit.gameObject.name);
-            Vector2 direction = (hit.transform.position - transform.position).normalized;
-            Vector2 rayPosition = transform.position;
-            float rayDistance = _seeAreaSize.x;
-            LayerMask rayMask = ~(1 << gameObject.layer);
-
-            RaycastHit2D hit2D = Physics2D.Raycast(rayPosition, direction, rayDistance, rayMask);
-            if (hit2D.collider != null)
-            {
-                // print(hit2D.collider.gameObject.name);
-                if (hit2D.collider != hit)
-                    Debug.DrawLine(transform.position, hit2D.point, Color.white);
-                else
-                    Debug.DrawLine(transform.position, hit2D.point, Color.red);
-            }
+            Move(target);
+            return;
         }
 
         if (_isWaiting == false)
         {
-            Move();
+            Move(_target);
         }
 
         if (IsTargetReached() && _isWaiting == false)
@@ -63,9 +48,42 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private void Move()
+    private bool TrySeeTarget(out Transform target)
     {
-        Vector2 newPosition = Vector2.MoveTowards(transform.position, _target.position, _speed);
+        target = null;
+
+        Collider2D hit = Physics2D.OverlapBox(GetLookOrigin(), _seeAreaSize, 0, _targetLayer);
+
+        if (hit != null)
+        {
+            // print(hit.gameObject.name);
+            Vector2 direction = (hit.transform.position - transform.position).normalized;
+            Vector2 rayPosition = transform.position;
+            float rayDistance = _seeAreaSize.x;
+            LayerMask rayMask = ~(1 << gameObject.layer);
+
+            RaycastHit2D hit2D = Physics2D.Raycast(rayPosition, direction, rayDistance, rayMask);
+            if (hit2D.collider != null)
+            {
+                // print(hit2D.collider.gameObject.name);
+                if (hit2D.collider == hit)
+                {
+                    Debug.DrawLine(transform.position, hit2D.point, Color.red);
+                    target = hit2D.transform;
+                    return true;
+                }
+                else
+                {
+                    Debug.DrawLine(transform.position, hit2D.point, Color.white);
+                }
+            }
+        }
+        return false;
+    }
+
+    private void Move(Transform target)
+    {
+        Vector2 newPosition = Vector2.MoveTowards(transform.position, target.position, _speed);
         _rigidbody.MovePosition(newPosition);
     }
 
