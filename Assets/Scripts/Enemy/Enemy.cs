@@ -56,7 +56,6 @@ public class Enemy : MonoBehaviour
 
         if (hit != null)
         {
-            // print(hit.gameObject.name);
             Vector2 direction = (hit.transform.position - transform.position).normalized;
             Vector2 rayPosition = transform.position;
             float rayDistance = _seeAreaSize.x;
@@ -65,7 +64,6 @@ public class Enemy : MonoBehaviour
             RaycastHit2D hit2D = Physics2D.Raycast(rayPosition, direction, rayDistance, rayMask);
             if (hit2D.collider != null)
             {
-                // print(hit2D.collider.gameObject.name);
                 if (hit2D.collider == hit)
                 {
                     Debug.DrawLine(transform.position, hit2D.point, Color.red);
