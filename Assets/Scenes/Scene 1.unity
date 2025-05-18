@@ -251,7 +251,7 @@ Transform:
   m_GameObject: {fileID: 89310560}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -4.951741, y: -7.1199994, z: 0}
+  m_LocalPosition: {x: -4.9526033, y: -7.1199994, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -410,6 +410,10 @@ MonoBehaviour:
   - {fileID: 339021056}
   _speed: 0.03
   _waitTime: 2
+  _seeAreaSize: {x: 4, y: 3}
+  _targetLayer:
+    serializedVersion: 2
+    m_Bits: 128
 --- !u!50 &192911876
 Rigidbody2D:
   serializedVersion: 4
@@ -1672,7 +1676,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -4.951741, y: -7.1199994, z: 0}
+  m_LocalPosition: {x: -4.9526033, y: -7.1199994, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -8675,6 +8679,10 @@ PrefabInstance:
     - target: {fileID: 1480214383199254626, guid: 7b2cd0614e051ec41a8bb1fa8928f54e, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 1480214383199254626, guid: 7b2cd0614e051ec41a8bb1fa8928f54e, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 5838526520405495830, guid: 7b2cd0614e051ec41a8bb1fa8928f54e, type: 3}
       propertyPath: m_LocalPosition.x

@@ -6,6 +6,8 @@ public class Enemy : MonoBehaviour
     [SerializeField] private WayPoint[] _wayPoints;
     [SerializeField] private float _speed = 0.03f;
     [SerializeField] private float _waitTime = 2f;
+    [SerializeField] private Vector2 _seeAreaSize;
+    [SerializeField] private LayerMask _targetLayer;
 
     private Rigidbody2D _rigidbody;
     private bool _isTurnLeft = true;
@@ -15,7 +17,7 @@ public class Enemy : MonoBehaviour
     private bool _isWaiting = false;
     private float _endWaitTime;
 
-    private void Awake()
+    private void Start()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
         _target = _wayPoints[_wayPointIndex].transform;
@@ -23,6 +25,13 @@ public class Enemy : MonoBehaviour
 
     private void FixedUpdate()
     {
+        Collider2D hit = Physics2D.OverlapBox(GetLookOrigin(), _seeAreaSize, 0, _targetLayer);
+
+        if (hit != null)
+        {
+            // print(hit.gameObject.name);
+        }
+
         if (_isWaiting == false)
         {
             Move();
@@ -49,7 +58,6 @@ public class Enemy : MonoBehaviour
     private bool IsTargetReached()
     {
         float sqrDistance = (transform.position - _target.position).sqrMagnitude;
-
         return sqrDistance < _maxSqrDistance;
     }
 
@@ -59,5 +67,20 @@ public class Enemy : MonoBehaviour
         _target = _wayPoints[_wayPointIndex].transform;
         _isTurnLeft = !_isTurnLeft;
         transform.Flip();
+    }
+
+    private Vector2 GetLookOrigin()
+    {
+        float halfCoeff = 4f;
+        int directionCoeff = _isTurnLeft ? -1 : 1;
+        float originX = transform.position.x + _seeAreaSize.x / halfCoeff * directionCoeff;
+        float originY = transform.position.y;
+        return new Vector2(originX, originY);
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireCube(GetLookOrigin(), _seeAreaSize);
     }
 }
