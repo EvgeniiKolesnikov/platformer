@@ -5,6 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterAttacker))]
 public class Player : MonoBehaviour
 {
+    [SerializeField] private int _maxHealth = 100;
     private InputReader _inputReader;
     private Mover _mover;
     private CharacterAnimator _characterAnimator;
@@ -15,8 +16,11 @@ public class Player : MonoBehaviour
 
     private IInteractable _interactable;
 
+    private Health _health;
+
     private void Awake()
     {
+        _health = new Health(_maxHealth);
         _inputReader = GetComponent<InputReader>();
         _mover = GetComponent<Mover>();
         _characterAnimator = GetComponent<CharacterAnimator>();
@@ -96,4 +100,15 @@ public class Player : MonoBehaviour
         else
             _mover.Move(_inputReader.Direction, _mover.MoveSpeed);
     }
+
+    public void ApplyDamage(int damage)
+    {
+        _health.ApplyDamage(damage);
+    }
+
+    public void Heal(int value)
+    {
+        _health.Heal(value);
+    }
+
 }

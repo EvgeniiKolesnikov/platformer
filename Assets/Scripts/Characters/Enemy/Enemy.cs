@@ -4,6 +4,7 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterAnimator), typeof(CharacterAttacker))]
 public class Enemy : MonoBehaviour
 {
+    [SerializeField] private int _maxHealth = 100;
     [SerializeField] private WayPoint[] _wayPoints;
     [SerializeField] private float _waitTime = 2f;
 
@@ -14,6 +15,7 @@ public class Enemy : MonoBehaviour
     private CharacterAttacker _characterAttacker;
     private Vector2 _enemyDirection;
     private Transform _target;
+    private Health _health;
 
     private int _wayPointIndex;
     private float _maxSqrDistance = 0.02f;
@@ -22,6 +24,11 @@ public class Enemy : MonoBehaviour
     private bool _isWaiting = false;
     private bool _isFollowing = false;
     // private bool _isSleep = false;
+
+    private void Awake()
+    {
+        _health = new Health(_maxHealth);
+    }
 
     private void Start()
     {
@@ -103,5 +110,15 @@ public class Enemy : MonoBehaviour
         _wayPointIndex = ++_wayPointIndex % _wayPoints.Length;
         _target = _wayPoints[_wayPointIndex].transform;
         _fliper.LookAtTarget(_target.position);
+    }
+
+    public void ApplyDamage(int damage)
+    {
+        _health.ApplyDamage(damage);
+        print("enemy health = " + _health.Value);
+        if (_health.Value <= 0)
+        {
+            Destroy(gameObject);
+        }
     }
 }
