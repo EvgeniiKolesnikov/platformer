@@ -1,12 +1,12 @@
 using UnityEngine;
 
 [RequireComponent(typeof(InputReader), typeof(Mover), typeof(Dash))]
-[RequireComponent(typeof(PlayerAnimator), typeof(CollisionHandler), typeof(Fliper))]
+[RequireComponent(typeof(CharacterAnimator), typeof(CollisionHandler), typeof(Fliper))]
 public class Player : MonoBehaviour
 {
     private InputReader _inputReader;
     private Mover _mover;
-    private PlayerAnimator _playerAnimator;
+    private CharacterAnimator _characterAnimator;
     private CollisionHandler _collisionHandler;
     private Fliper _fliper;
     private Dash _dash;
@@ -17,11 +17,10 @@ public class Player : MonoBehaviour
     {
         _inputReader = GetComponent<InputReader>();
         _mover = GetComponent<Mover>();
-        _playerAnimator = GetComponent<PlayerAnimator>();
+        _characterAnimator = GetComponent<CharacterAnimator>();
         _collisionHandler = GetComponent<CollisionHandler>();
         _fliper = GetComponent<Fliper>();
         _dash = GetComponent<Dash>();
-        transform.Flip();
     }
 
     private void OnEnable()
@@ -37,7 +36,7 @@ public class Player : MonoBehaviour
     private void FixedUpdate()
     {
         UpdateDashStatus();
-        UpdatePlayerAnimator();
+        UpdateCharacterAnimator();
         PlayerMove();
         PlayerInteract();
 
@@ -63,15 +62,15 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void UpdatePlayerAnimator()
+    private void UpdateCharacterAnimator()
     {
-        _playerAnimator.SetSpeedX(_inputReader.Direction.x);
-        _playerAnimator.SetSpeedY(_inputReader.Direction.y);
-
         if (_inputReader.Direction.x == 0 && _inputReader.Direction.y == 0)
-            _playerAnimator.SetIdle(true);
+            _characterAnimator.SetIdle(true);
         else
-            _playerAnimator.SetIdle(false);
+            _characterAnimator.SetIdle(false);
+
+        _characterAnimator.SetSpeedX(_inputReader.Direction.x);
+        _characterAnimator.SetSpeedY(_inputReader.Direction.y);
     }
 
     private void PlayerMove()
@@ -80,12 +79,6 @@ public class Player : MonoBehaviour
         {
             _fliper.LookAtTarget(transform.position + Vector3.right * _inputReader.Direction.x);
         }
-        // if ((direction.x > 0 && _isTurnLeft)
-        // || (direction.x < 0 && _isTurnLeft == false))
-        // {
-        //     _isTurnLeft = !_isTurnLeft;
-        //     transform.Flip();
-        // }
         if (_dash.IsDashing)
             _mover.Move(_dash.DashDirection, _dash.DashSpeed);
         else

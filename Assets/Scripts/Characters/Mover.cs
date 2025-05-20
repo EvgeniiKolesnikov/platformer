@@ -11,7 +11,6 @@ public class Mover : MonoBehaviour
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
-        transform.Flip();
     }
 
     public void Move(Vector2 direction, float speed)
