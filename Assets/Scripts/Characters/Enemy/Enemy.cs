@@ -50,29 +50,27 @@ public class Enemy : MonoBehaviour
             if (_isFollowing)
             {
                 _isFollowing = false;
+                InitWaiting();
                 _target = _wayPoints[_wayPointIndex].transform;
-                _fliper.LookAtTarget(_target.position);
             }
         }
 
         if (_isWaiting == false)
-        {
             _mover.Move(_target, _mover.EnemySpeed);
-        }
 
         if (IsTargetReached() && _isWaiting == false)
-        {
-            _isWaiting = true;
-            _endWaitTime = Time.time + _waitTime;
-        }
+            InitWaiting();
 
         if (_isWaiting && _endWaitTime <= Time.time)
-        {
-            _isWaiting = false;
             ChangeTarget();
-        }
 
         UpdateCharacterAnimator();
+    }
+
+    private void InitWaiting()
+    {
+        _isWaiting = true;
+        _endWaitTime = Time.time + _waitTime;
     }
 
     private void UpdateCharacterAnimator()
@@ -89,11 +87,6 @@ public class Enemy : MonoBehaviour
         }
         _characterAnimator.SetSpeedX(_enemyDirection.x);
         _characterAnimator.SetSpeedY(_enemyDirection.y);
-
-        // print("_enemyDirection = " + _enemyDirection);
-        // print("transform.position.x = " + transform.position.x + ", transform.position.y = " + transform.position.y);
-        // print("_target.position.x = " + _target.position.x + ", _target.position.y = " + _target.position.y);
-        // print("_enemyDirection.x = " + _enemyDirection.x + ", _enemyDirection.y = " + _enemyDirection.y);
     }
 
     private bool IsTargetReached()
@@ -104,6 +97,7 @@ public class Enemy : MonoBehaviour
 
     private void ChangeTarget()
     {
+        _isWaiting = false;
         _wayPointIndex = ++_wayPointIndex % _wayPoints.Length;
         _target = _wayPoints[_wayPointIndex].transform;
         _fliper.LookAtTarget(_target.position);
