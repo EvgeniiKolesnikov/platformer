@@ -4,7 +4,7 @@ using UnityEngine;
 public class Mover : MonoBehaviour
 {
     public float MoveSpeed { get; private set; } = 2f;
-    public float EnemySpeed { get; private set; } = 0.03f;
+    public float EnemySpeed { get; private set; } = 0.02f;
 
     private Rigidbody2D _rigidbody;
 

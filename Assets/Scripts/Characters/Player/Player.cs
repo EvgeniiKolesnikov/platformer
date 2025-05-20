@@ -2,11 +2,13 @@ using UnityEngine;
 
 [RequireComponent(typeof(InputReader), typeof(Mover), typeof(Dash))]
 [RequireComponent(typeof(CharacterAnimator), typeof(CollisionHandler), typeof(Fliper))]
+[RequireComponent(typeof(CharacterAttacker))]
 public class Player : MonoBehaviour
 {
     private InputReader _inputReader;
     private Mover _mover;
     private CharacterAnimator _characterAnimator;
+    private CharacterAttacker _characterAttacker;
     private CollisionHandler _collisionHandler;
     private Fliper _fliper;
     private Dash _dash;
@@ -18,6 +20,7 @@ public class Player : MonoBehaviour
         _inputReader = GetComponent<InputReader>();
         _mover = GetComponent<Mover>();
         _characterAnimator = GetComponent<CharacterAnimator>();
+        _characterAttacker = GetComponent<CharacterAttacker>();
         _collisionHandler = GetComponent<CollisionHandler>();
         _fliper = GetComponent<Fliper>();
         _dash = GetComponent<Dash>();
@@ -36,10 +39,10 @@ public class Player : MonoBehaviour
     private void FixedUpdate()
     {
         UpdateDashStatus();
+        UpdateAttackStatus();
         UpdateCharacterAnimator();
         PlayerMove();
         PlayerInteract();
-
     }
 
     private void PlayerInteract()
@@ -59,6 +62,15 @@ public class Player : MonoBehaviour
         {
             _dash.SetDirection(_inputReader.Direction);
             _dash.StartDash();
+        }
+    }
+
+    private void UpdateAttackStatus()
+    {
+        if (_inputReader.GetIsAttack() && _characterAttacker.CanAttack)
+        {
+            _characterAttacker.Attack();
+            _characterAnimator.SetAttackTrigger();
         }
     }
 

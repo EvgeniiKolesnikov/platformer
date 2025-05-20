@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Mover), typeof(Fliper), typeof(EnemyVision))]
-[RequireComponent(typeof(CharacterAnimator))]
+[RequireComponent(typeof(CharacterAnimator), typeof(CharacterAttacker))]
 public class Enemy : MonoBehaviour
 {
     [SerializeField] private WayPoint[] _wayPoints;
@@ -11,6 +11,7 @@ public class Enemy : MonoBehaviour
     private Fliper _fliper;
     private EnemyVision _enemyVision;
     private CharacterAnimator _characterAnimator;
+    private CharacterAttacker _characterAttacker;
     private Vector2 _enemyDirection;
     private Transform _target;
 
@@ -28,13 +29,14 @@ public class Enemy : MonoBehaviour
         _fliper = GetComponent<Fliper>();
         _enemyVision = GetComponent<EnemyVision>();
         _characterAnimator = GetComponent<CharacterAnimator>();
+        _characterAttacker = GetComponent<CharacterAttacker>();
         _target = _wayPoints[_wayPointIndex].transform;
     }
 
     private void FixedUpdate()
     {
         _enemyDirection = _target.position - transform.position;
-
+        _enemyDirection = _enemyDirection.normalized;
         if (_enemyVision.TrySeeTarget(out Transform target, _enemyDirection))
         {
             _isFollowing = true;

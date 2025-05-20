@@ -16,4 +16,8 @@ public class CharacterAnimator : MonoBehaviour
     {
         _animator.SetBool(Constants.AnimatorData.Idle, idle);
     }
+    public void SetAttackTrigger()
+    {
+        _animator.SetTrigger(Constants.AnimatorData.IsAttack);
+    }
 }
